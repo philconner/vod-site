@@ -1,0 +1,24 @@
+<h2>request.GET:</h2>
+<br>
+    {{ request.GET }}
+<br>
+
+<h2>request.POST:</h2>
+<br>
+    {{ request.POST }}
+<br>
+
+<h2>request.FILES:</h2>
+<br>
+    {{ request.FILES }}
+<br>
+
+<h2>request.user:</h2>
+<br>
+    user: {{ request.user }}
+<br>
+    username: {{ request.user.username }}
+<br>
+    groups: {{ request.user.groups.all }}
+<br>
+    permissions: {{ request.user.user_permissions.all }}

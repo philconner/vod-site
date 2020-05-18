@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}
+ | {{ page_name }}
+{% endblock %}
+
+{% block nav-search %}
+active
+{% endblock %}
+
+{% block header %}
+{{ page_name }}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-10">
+        <form method="GET">
+            <div class="input-group input-group-lg mb-3">
+                <input type="text" name="query" value="{{ request.GET.query }}" class="form-control" placeholder="Search">
+                <div class="input-group-append">
+                    <button class="btn" type="submit"><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div class="row">
+    {% if no_results_message %}
+        <p>{{ no_results_message }}</p>
+    {% else %}
+
+        <!-- Grid with 3 videos per row -->
+        {% for video in page_obj %}
+            <div class="col-sm-6">
+                <br>
+                <br>
+                {% if video.video_file %}
+                    <a href="{% url 'video-detail' pk=video.pk %}">
+                        <img class="img-fluid rounded thumbnail" src="{{ MEDIA_URL }}{{ video.thumbnail }}" alt="{{ video.title }}" style="object-fit:cover;">
+                    </a>
+                {% elif video.embed_link %}
+                    <a href="{% url 'video-detail' pk=video.pk %}">
+                        <img class="img-fluid rounded thumbnail" src="{{ video.thumbnail_url }}" alt="{{ video.title }}" style="object-fit:cover;">
+                    </a>
+                {% endif %}
+
+                <table class="table table-sm table-borderless video-info">
+                    <tr>
+                        <th class="video-info-header" colspan="2">{{ video.title }}</th>
+                    </tr>
+                    <tr>
+                        <td class="table-label">Speaker:</td>
+                        <td class="text-left">{{ video.speaker }}</td>
+                    </tr>
+                    <tr>
+                        <td class="table-label">Category:</td>
+                        <td class="text-left">{{ video.get_category_display }}</td>
+                    </tr>
+                    <tr>
+                        <td class="table-label">Uploaded:</td>
+                        <td class="text-left">{{ video.datetime|date }}</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!--  Check if last column in row  -->
+            {% if forloop.counter|divisibleby:"2" and not forloop.last %}
+                </div><div class="row">
+            {% endif %}
+
+        {% endfor %}
+    {% endif %}
+</div>
+
+<!-- Pagination links, only show if 2 or more pages -->
+{% if page_obj.has_other_pages %}
+    <div class="row pt-5">
+        <div class="col">
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1{% if request.GET.query %}&query={{ request.GET.query }}{% endif %}"><i class="fas fa-angle-double-left"></i></a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.query %}&query={{ request.GET.query }}{% endif %}">Previous</a>
+                    </li>
+                {% endif %}
+
+                <li class="page-item disabled">
+                    <a class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</a>
+                </li>
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.query %}&query={{ request.GET.query }}{% endif %}">Next</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.query %}&query={{ request.GET.query }}{% endif %}"><i class="fas fa-angle-double-right"></i></a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}

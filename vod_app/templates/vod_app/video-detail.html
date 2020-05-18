@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}
+ | {{ object.title }}
+{% endblock %}
+
+{% block nav-search %}
+active
+{% endblock %}
+
+{% block header %}
+{{ object.title }}
+{% endblock %}
+
+{% block content %}
+    <div>
+        {% if object.video_file %}
+            <video width="75%" height="auto" controls>
+                <source src="{{ MEDIA_URL }}{{ object.video_file }}" type="video/mp4">
+            </video>
+        {% elif object.embed_link %}
+        <div class="iframe-detail-div">
+            <iframe class="iframe-detail" src="{{ object.embed_link }}" frameborder="0" allow="picture-in-picture" controls></iframe>
+        </div>
+        {% endif %}
+    </div>
+
+    <br>
+
+    <table>
+        <tr>
+            <td>Speaker:</td>
+            <td>{{ object.speaker }}</td>
+        </tr>
+        <tr>
+            <td>Category:</td>
+            <td>{{ object.get_category_display }}</td>
+        </tr>
+        <tr>
+            <td>Uploaded:</td>
+            <td>{{ object.datetime|date }}</td>
+        </tr>
+        {% if object.description %}
+            <tr>
+                <td>Description:</td>
+                <td>{{ object.description }}</td>
+            </tr>
+        {% endif %}
+    </table>
+
+    {% if related_pictures|length > 0 %}
+        <br>
+        <hr class="divider">
+        <br>
+
+        <h1>Picture Gallery</h1>
+        <br>
+        {% for picture in related_pictures %}
+            <div>
+                <div>
+                    <img class="img-fluid" src="{{ MEDIA_URL }}{{ picture.picture_file }}" alt="{{ picture.caption }}" width="400" height="400">
+                </div>
+                <div>
+                    <p>{{ picture.caption }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+{% endblock %}

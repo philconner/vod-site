@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}
+ | {{ page_name }}
+{% endblock %}
+
+{% block nav-home %}
+active
+{% endblock %}
+
+{% block header %}
+Welcome: <small>Watch or upload academic videos.</small>
+{% endblock %}
+
+{% block content %}
+<h1>Featured Video</h1>
+<hr>
+<div class="row">
+    <div class="col">
+        <h2>{{ most_recent_video.title }}</h2>
+
+        {% if most_recent_video.video_file %}
+            <a href="{% url 'video-detail' pk=most_recent_video.pk %}">
+                <img class="img-fluid"  src="{{ MEDIA_URL }}{{ most_recent_video.thumbnail }}" alt="{{ most_recent_video.title }}" width="50%">
+            </a>
+        {% elif most_recent_video.embed_link %}
+            <a href="{% url 'video-detail' pk=most_recent_video.pk %}">
+                <img class="img-fluid" src="{{ most_recent_video.thumbnail_url }}" alt="{{ most_recent_video.title }}" width="50%">
+            </a>
+        {% endif %}
+
+        <table>
+            <tr>
+                <td>Speaker:</td>
+                <td>{{ most_recent_video.speaker }}</td>
+            </tr>
+            <tr>
+                <td>Category:</td>
+                <td>{{ most_recent_video.get_category_display }}</td>
+            </tr>
+            <tr>
+                <td>Uploaded:</td>
+                <td>{{ most_recent_video.datetime|date }}</td>
+            </tr>
+            {% if most_recent_video.description %}
+                <tr>
+                    <td>Description:</td>
+                    <td>{{ most_recent_video.description }}</td>
+                </tr>
+            {% endif %}
+        </table>
+    </div>
+</div>
+{% endblock %}

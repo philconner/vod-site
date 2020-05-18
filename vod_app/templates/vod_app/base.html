@@ -1,0 +1,84 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Academic VoD{% block title %}{% endblock %}</title>
+    <!--  Bootstrap CSS  -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <!--  jQuery  -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!--    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>-->
+    <!--  Popper JS  -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <!--  Bootstrap's JS  -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <!--  Font Awesome icons  -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+
+    <!--  Local CSS  -->
+    <link rel="stylesheet" type="text/css" href="{% static 'vod_app/style.css' %}">
+    {% block local_js %}
+    {% endblock %}
+</head>
+
+<body>
+
+
+<nav class="navbar navbar-expand-sm navbar-dark sticky-top">
+    <div class="container col-sm-8">
+        <a class="navbar-brand {% block nav-home %}{% endblock %}" href="{% url 'vod-home' %}">Home</a>
+        <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse text-right" id="collapsibleNavbar">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link {% block nav-search %}{% endblock %}" href="{% url 'vod-search' %}">Search</a>
+                </li>
+                {% if user_can_upload %}
+                    <li class="nav-item">
+                        <a class="nav-link {% block nav-upload %}{% endblock %}" href="{% url 'vod-upload' %}">Upload</a>
+                    </li>
+                {% endif %}
+            </ul>
+                {% if request.user.is_authenticated %}
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">{{ request.user }}</a>
+                            <div class="dropdown-menu dropdown-menu-right rounded">
+                                <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                            </div>
+                        </li>
+                    </ul>
+                {% else %}
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link {% block nav-login %}{% endblock %}" href="{% url 'login' %}">Login</a>
+                        </li>
+                    </ul>
+                {% endif %}
+        </div>
+    </div>
+</nav>
+
+
+<header>
+    <div class="container col-sm-8 header pt-4 pb-2">
+        <h1>
+            {% block header %}
+            {% endblock %}
+        </h1>
+    </div>
+</header>
+
+<div class="container col-sm-8 content pt-4 pb-4 pl-5 pr-5 mb-5 rounded-bottom shadow-sm">
+    {% block content %}
+    {% endblock %}
+</div>
+
+</body>
+</html>

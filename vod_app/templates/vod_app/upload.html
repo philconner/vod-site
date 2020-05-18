@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+ | {{ page_name }}
+{% endblock %}
+
+{% block nav-upload %}
+active
+{% endblock %}
+
+{% block header %}
+{{ page_name }}
+{% endblock %}
+
+{% block content %}
+{% if denied_message %}
+    <p>{{ denied_message }}</p>
+{% elif user_can_upload %}
+    <div class="row">
+        <div class="col-sm-8">
+            <p>
+                Do you want to upload a video, or embed a video from another site?
+            </p>
+            <a class="btn" href="{% url 'vod-upload-file' %}">Upload Video</a>
+            <a class="btn" href="{% url 'vod-upload-embed' %}">Embed Video</a>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}

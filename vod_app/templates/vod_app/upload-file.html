@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block local_js %}
+    <script src="{% static 'vod_app/vod_site.js' %}"></script>
+{% endblock %}
+
+{% block title %}
+ | {{ page_name }}
+{% endblock %}
+
+{% block nav-upload %}
+active
+{% endblock %}
+
+{% block header %}
+{{ page_name }}: <small>Video File</small>
+{% endblock %}
+
+{% block content %}
+{% if denied_message %}
+    <p>{{ denied_message }}</p>
+{% elif success %}
+    <p>You have successfully uploaded the following video: <a href="{% url 'video-detail' pk=added_video.pk %}">{{ added_video.title }}</a></p>
+{% elif user_can_upload %}
+    <div class="row">
+        <div class="col">
+            <a class="btn" href="{% url 'vod-upload' %}">Back</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-8 pt-2 pl-3">
+            <form action="{% url 'vod-upload-file' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="row" id="upload-form">
+                    <div class="col">
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <br>
+                                <p>Use the forms below to upload a video and optionally any related pictures.</p>
+                                <hr class="divider">
+                                <!-- video upload form -->
+                                <table>
+                                    <tr>
+                                        <td>    {{ video_upload_form.title.label_tag }}</td>
+                                        <td>{{ video_upload_form.title }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ video_upload_form.description.label_tag }}</td>
+                                        <td>{{ video_upload_form.description }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ video_upload_form.speaker.label_tag }}</td>
+                                        <td>{{ video_upload_form.speaker }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ video_upload_form.category.label_tag }}</td>
+                                        <td>{{ video_upload_form.category }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ video_upload_form.video_file.label_tag }}</td>
+                                        <td>{{ video_upload_form.video_file }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ video_upload_form.thumbnail_time.label_tag }}</td>
+                                        <td>{{ video_upload_form.thumbnail_time }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!--  Display errors if there are any  -->
+                        {% if video_upload_form.errors %}
+                            <div class="row pt-2">
+                                <div class="col">
+                                    {% for k,v in video_upload_form.errors.items %}
+                                        <div class="alert alert-danger">
+                                            {{ k }}:{{ v|escape }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- picture upload form -->
+                <div class="row" id="picture-forms">
+                    <div class="col-sm-9">
+                        <hr class="divider">
+                        {{ picture_formset.management_form }}
+                        {% for picture_form in picture_formset %}
+                            <div class="row form-row">
+                                <div class="col">
+                                    <div class="row">
+                                        <div class="col">
+                                            <table>
+                                                <tr>
+                                                    <td>{{ picture_form.picture_file.label_tag }}</td>
+                                                    <td>{{ picture_form.picture_file }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>{{ picture_form.caption.label_tag }}</td>
+                                                    <td>{{ picture_form.caption }}</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <table class="add-remove-buttons">
+                                                <tr>
+                                                    <td><button type="button" class="btn remove-form-row">-</button></td>
+                                                    <td><button type="button" class="btn add-form-row">+</button></td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <!--  Display errors if there are any  -->
+                                    {% if picture_form.errors %}
+                                        <div class="row pt-2">
+                                            <div class="col">
+                                                {% for k,v in picture_form.errors.items %}
+                                                    <div class="alert alert-danger">
+                                                        {{ k }}:{{ v|escape }}
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    <div class="row">
+                                        <div class="col">
+                                            <hr>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                        <!-- submit button -->
+                        <div class="row">
+                            <div class="col pl-3 pt-4">
+                                <input type="submit" class="btn" value="Submit"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}

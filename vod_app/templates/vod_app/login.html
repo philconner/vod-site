@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}
+ | {{ page_name }}
+{% endblock %}
+
+{% block nav-login %}
+active
+{% endblock %}
+
+{% block header %}
+{{ page_name }}
+{% endblock %}
+
+{% block content %}
+{% if request.user.is_authenticated %}
+    <p>You are already logged in as <b>{{ request.user.username }}.</b></p>
+{% else %}
+    <form action="{% url 'login' %}" method="POST">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <td>{{ form.username.label_tag }}</td>
+                <td>{{ form.username }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.password.label_tag }}</td>
+                <td>{{ form.password }}</td>
+            </tr>
+        </table>
+        <br>
+        <input type="submit" class="btn" value="Login"/>
+        <input type="hidden" name="next" value="{{ next }}"/>
+    </form>
+{% endif %}
+{% endblock %}
